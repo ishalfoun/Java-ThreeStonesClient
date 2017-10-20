@@ -2,9 +2,13 @@ package ThreeStone;
 
 /**
  *
- * @author KimHyonh
+ * @author Pengkim Sy
  */
 public class Flat extends Tile{
+
+    public Flat(int x, int y) {
+        super(x, y);
+    }
 
     @Override
     public boolean isPlayable() {
@@ -12,7 +16,12 @@ public class Flat extends Tile{
     }
 
     @Override
-    public Tile getPosition() {
+    public Tile getTile() {
         return this;
-    }    
+    }
+
+    @Override
+    public boolean hasStone() {
+        return false;
+    }
 }
