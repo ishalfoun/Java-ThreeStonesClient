@@ -20,13 +20,18 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ThreeStonesBoard boardModel = new ThreeStonesBoard(11);
+        /*ThreeStonesBoard boardModel = new ThreeStonesBoard(11);
         JFrame.setDefaultLookAndFeelDecorated(true);
         JFrame frame = new JFrame();
         frame.setTitle("OUR AMAZING GAME!!!");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
-        frame.setVisible(true);
+        frame.setVisible(true);*/
+        
+         ThreeStonesBoard boardModel = new ThreeStonesBoard(11);
+         boardModel.fillBoardFromCSV("src/main/resources/board.csv");
+         
+
         
         
         
