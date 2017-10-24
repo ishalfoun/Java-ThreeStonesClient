@@ -24,4 +24,8 @@ public class Flat extends Tile{
     public boolean hasStone() {
         return false;
     }
+    
+    public String toString(){
+        return "flat";
+    }
 }
