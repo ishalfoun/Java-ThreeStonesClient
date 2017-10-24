@@ -6,14 +6,25 @@ package ThreeStone;
  */
 public class Stone extends Tile {
     
-    public Stone() {
-        this(0, 0);
+    PlayerType type;
+
+    public Stone(PlayerType type) {
+        this(0, 0, type);        
     }
-    public Stone(int x, int y) {
+    
+    public Stone(int x, int y, PlayerType type) {
         super(x, y);
+        this.type = type;
+    }
+    
+    public PlayerType getType() {
+        return type;
     }
 
-
+    public void setType(PlayerType type) {
+        this.type = type;
+    }
+    
     @Override
     public boolean isPlayable() {
         return false;
@@ -27,9 +38,5 @@ public class Stone extends Tile {
     @Override
     public boolean hasStone() {
         return true;
-    }
-    
-    public String toString(){
-        return ("stone");
     }
 }

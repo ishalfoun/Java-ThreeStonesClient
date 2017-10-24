@@ -51,6 +51,7 @@ public class ThreeStonesBoard {
         if(board[stone.getX()][stone.getY()].isPlayable()){
             Slot slot = (Slot) board[stone.getX()][stone.getY()];
             slot.placeStone(stone);
+            
         }
     }
     
