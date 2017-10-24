@@ -10,18 +10,10 @@ public class Slot extends Tile {
     
     public Slot(int x, int y) {
         super(x, y);
-        stone = null;
+        stone = new Stone(x, y);
     }
 
     public void placeStone(Stone stone) {
-        this.stone = stone;
-    }
-
-    public Stone getStone() {
-        return stone;
-    }
-
-    public void setStone(Stone stone) {
         this.stone = stone;
     }
     
