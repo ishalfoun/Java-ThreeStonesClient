@@ -28,4 +28,8 @@ public class Stone extends Tile {
     public boolean hasStone() {
         return true;
     }
+    
+    public String toString(){
+        return ("stone");
+    }
 }
