@@ -5,6 +5,7 @@
  */
 package ThreeStone;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -94,9 +96,12 @@ public class ClientGame {
         JFrame frame = new JFrame();
         frame.setTitle("OUR AMAZING GAME!!!");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        //frame.setSize(800,800);
+        
         JTable table = new JTable(board.getSize(), board.getSize());
-table.setPreferedSize(new Dimension(800,600));
+        table.setRowHeight(55);
+        
+        frame.setPreferredSize(new Dimension(800,600));
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
                 String toPrint = board.getBoard()[i][j].toString();
@@ -158,6 +163,18 @@ table.setPreferedSize(new Dimension(800,600));
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientGame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    public void refreshBoard(JTable table, ThreeStonesBoard board){
+        for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 11; j++) {
+                String toPrint = board.getBoard()[i][j].toString();
+                //JButton spot = new JButton();
+
+                table.setValueAt(toPrint, i, j);
+            }
         }
     }
 }
