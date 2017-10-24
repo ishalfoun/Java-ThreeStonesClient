@@ -23,33 +23,42 @@ import javax.swing.JTable;
  */
 public class ClientGame {
 
-    ClientSession isi;
+    ClientSession connection;
     ThreeStonesBoard boardModel;
     Stone stone;
     boolean gameOn=false;
+    Stone clientStone;
 
+    Logger l = Logger.getLogger(ClientGame.class.getName());
+            
+            
+            
     public ClientGame() throws IOException {
-
-        boardModel = new ThreeStonesBoard(11);
+    l.log(Level.INFO, "Starting Game");
+    
+        boardModel = new ThreeStonesBoard(11); 
         boardModel.fillBoardFromCSV("src/main/resources/board.csv");
         drawMenu();
-        initConnection();
-
+        // if user clicks on start, the connection is started
     }
 
     public void initConnection() throws IOException {
-        String server = "192.168.12.104";
-        int servPort = 7;
-        isi = new ClientSession(new Socket(server, servPort));
-
+    l.log(Level.INFO, "user initiated connection");
+    
+        String server = "10.230.119.125";        
+        int servPort = 50000;
+        connection = new ClientSession(new Socket(server, servPort));
+        
+    l.log(Level.INFO, "init connection successful server="+server);
     }
 
     public void drawMenu() {
         JFrame.setDefaultLookAndFeelDecorated(true);
         JFrame frame = new JFrame();
-        frame.setTitle("OUR AMAZING GAME!!!");
+        frame.setTitle("Three Stones Online");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    l.log(Level.INFO, "Drawing menu");
         JButton startGameBtn = new JButton("Start Game");
         startGameBtn.addActionListener(new ActionListener() {
 
@@ -57,8 +66,15 @@ public class ClientGame {
             public void actionPerformed(ActionEvent e) {
                 // display/center the jdialog when the button is pressed
                 JTable table = drawBoard(boardModel);
+                
+    l.log(Level.INFO, "user clicked to start");
+                try {
+                    initConnection();
                 if (waitForResponse()) {
                     setClickListeners(table);
+                }
+                } catch (IOException ex) {
+                    l.log(Level.INFO, "waiting for response error");
                 }
             }
         });
@@ -71,14 +87,17 @@ public class ClientGame {
 
     public void gameOver()
     {
-        System.out.println("    GAME OVER");
-    }
-    
+        l.log(Level.INFO, "Game Over");
+    }    
     public boolean waitForResponse() {
+        
+    l.log(Level.INFO, "wait for response");
         ArrayList<Object> recvd;
         try {
-            recvd = isi.receivePacket();
+            recvd = connection.receivePacket();
             if (recvd.get(1) == Opcode.ACK_GAME_START) {
+                
+    l.log(Level.INFO, "received ACK_GAME_START");
                 return true;
             }
         } catch (IOException ex) {
@@ -92,11 +111,11 @@ public class ClientGame {
 
         JFrame.setDefaultLookAndFeelDecorated(true);
         JFrame frame = new JFrame();
-        frame.setTitle("OUR AMAZING GAME!!!");
+        frame.setTitle("Three Stones Online");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JTable table = new JTable(board.getSize(), board.getSize());
-table.setPreferedSize(new Dimension(800,600));
+//table.setPreferedSize(new Dimension(800,600));
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
                 String toPrint = board.getBoard()[i][j].toString();
@@ -121,7 +140,7 @@ table.setPreferedSize(new Dimension(800,600));
                 int row = table.rowAtPoint(evt.getPoint());
                 int col = table.columnAtPoint(evt.getPoint());
                 if (row >= 0 && col >= 0) {
-                    System.out.println(row + " " + col);
+    l.log(Level.INFO, "user clicked x="+row+" y="+col);
                     sendStone(row, col);
                 }
             }
@@ -131,33 +150,47 @@ table.setPreferedSize(new Dimension(800,600));
     }
 
     public void sendStone(int row, int col) {
-        Stone stone = new Stone(row, col, PlayerType.PLAYER);
+        
+        clientStone = new Stone(row, col, PlayerType.PLAYER);
+    l.log(Level.INFO, "sending stone row"+row+" col="+col);
         try {
-            isi.sendPacket(stone, Opcode.CLIENT_PLACE);
+            connection.sendPacket(clientStone, Opcode.CLIENT_PLACE);
         } catch (IOException ex) {
-            Logger.getLogger(ClientGame.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Sending failed");
+                l.log(Level.INFO, "sending error");
         }
 
-        boardModel.placeStone(stone);
+    l.log(Level.INFO, "send successful");
+        
         receiveStone();
 
     }
 
     public void receiveStone() {
         ArrayList<Object> recvd;
+        
+    l.log(Level.INFO, "receiving");
         try {
-            recvd = isi.receivePacket();
+            recvd = connection.receivePacket();
+            if (recvd.get(1) == Opcode.NOT_VALID_PLACE) {
+                l.log(Level.INFO, "NOT VALID MESSAGE DISPLAYED");
+            }
             if (recvd.get(1) == Opcode.SERVER_PLACE) {
                 stone = (Stone) recvd.get(0);
                 boardModel.placeStone(stone);
+                boardModel.placeStone(clientStone);
+                
+                l.log(Level.INFO, "received server_place, placing now");
             }
             if (recvd.get(1) == Opcode.REQ_PLAY_AGAIN)
             {
+                l.log(Level.INFO, "received req play again");
                 gameOver();
             }
         } catch (IOException ex) {
-            Logger.getLogger(ClientGame.class.getName()).log(Level.SEVERE, null, ex);
+           
+            l.log(Level.INFO, "receiving unsuccessful");
         }
+        
+    l.log(Level.INFO, "end receive");
     }
 }

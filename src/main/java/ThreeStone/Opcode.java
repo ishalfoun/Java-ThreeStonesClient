@@ -15,7 +15,8 @@ public enum Opcode {
    CLIENT_PLACE(2),
    SERVER_PLACE(3),
    REQ_PLAY_AGAIN(4),
-   ACK_PLAY_AGAIN (5);
+   ACK_PLAY_AGAIN (5),
+   NOT_VALID_PLACE(6);
    
     private final int value;
 
