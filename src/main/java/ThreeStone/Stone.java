@@ -39,4 +39,16 @@ public class Stone extends Tile {
     public boolean hasStone() {
         return true;
     }
+    
+    @Override
+    public String toString(){
+        if(type == type.PLAYER){
+            return "playerStone";
+        }
+        if(type == type.COMPUTER){
+            return "computerStone";
+        }
+        return "slot";
+    }
+
 }
