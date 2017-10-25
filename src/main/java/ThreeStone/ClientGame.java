@@ -18,7 +18,9 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellEditor;
 
@@ -37,23 +39,32 @@ public class ClientGame {
 
         boardModel = new ThreeStonesBoard(11);
         boardModel.fillBoardFromCSV("src/main/resources/board.csv");
-        drawMenu();
+        //String ip = drawMenu();
         initConnection();
-
     }
 
     public void initConnection() throws IOException {
-        String server = "192.168.12.104";
+        //String server = "192.168.12.104";
+        String server = drawMenu();
         int servPort = 7;
         isi = new ClientSession(new Socket(server, servPort));
-
     }
 
-    public void drawMenu() {
-        JFrame.setDefaultLookAndFeelDecorated(true);
+    public String drawMenu() {
         JFrame frame = new JFrame();
         frame.setTitle("OUR AMAZING GAME!!!");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        String ip = JOptionPane.showInputDialog(frame, "What ip do you want to connect to");
+        return ip;
+        
+        
+        
+        /*JFrame.setDefaultLookAndFeelDecorated(true);
+        JFrame frame = new JFrame();
+        frame.setTitle("OUR AMAZING GAME!!!");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                
+        
 
         JButton startGameBtn = new JButton("Start Game");
         startGameBtn.addActionListener(new ActionListener() {
@@ -61,6 +72,7 @@ public class ClientGame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // display/center the jdialog when the button is pressed
+                
                 JTable table = drawBoard(boardModel);
                 if (waitForResponse()) {
                     setClickListeners(table);
@@ -71,7 +83,7 @@ public class ClientGame {
 
         frame.pack();
         frame.setVisible(true);
-
+*/
     }
 
     public void gameOver()
