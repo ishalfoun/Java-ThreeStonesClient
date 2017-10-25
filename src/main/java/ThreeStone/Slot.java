@@ -39,4 +39,12 @@ public class Slot extends Tile {
     public boolean hasStone() {
         return stone != null;
     }
+    
+    public String toString(){
+        if(this.hasStone()){
+            return stone.toString();
+        }else{
+            return "slot";
+        }
+    }
 }

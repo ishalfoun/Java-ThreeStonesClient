@@ -5,6 +5,8 @@
  */
 package ThreeStone;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +20,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.TableCellEditor;
 
 /**
  *
@@ -100,14 +103,25 @@ public class ClientGame {
         
         JTable table = new JTable(board.getSize(), board.getSize());
         table.setRowHeight(55);
-        
+        table.setDefaultRenderer(Color.class, new ColorRenderer(true));
         frame.setPreferredSize(new Dimension(800,600));
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
                 String toPrint = board.getBoard()[i][j].toString();
-                //JButton spot = new JButton();
-
-                table.setValueAt(toPrint, i, j);
+                switch(toPrint){
+                    case "flat":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "slot":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "playerStone":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "computerStone":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                }
             }
         }
 
@@ -128,6 +142,7 @@ public class ClientGame {
                 if (row >= 0 && col >= 0) {
                     System.out.println(row + " " + col);
                     sendStone(row, col);
+                    refreshBoard(table, boardModel);
                 }
             }
 
@@ -144,7 +159,7 @@ public class ClientGame {
             System.out.println("Sending failed");
         }
 
-        boardModel.placeStone(stone);
+        //boardModel.placeStone(stone);
         receiveStone();
 
     }
@@ -168,13 +183,30 @@ public class ClientGame {
     
     
     public void refreshBoard(JTable table, ThreeStonesBoard board){
+        System.out.println("Refreshed the board");
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
                 String toPrint = board.getBoard()[i][j].toString();
-                //JButton spot = new JButton();
+                switch(toPrint){
+                    case "flat":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "slot":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "playerStone":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "computerStone":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                }
 
-                table.setValueAt(toPrint, i, j);
+                
             }
         }
+        System.out.println("done refreshing the board");
     }
+    
+    
 }
