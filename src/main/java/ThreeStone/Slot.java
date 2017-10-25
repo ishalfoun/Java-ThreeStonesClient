@@ -41,10 +41,9 @@ public class Slot extends Tile {
     }
     
     public String toString(){
-        if(this.hasStone()){
-            return stone.toString();
-        }else{
-            return "slot";
-        }
+        if (stone!=null)
+            return stone.getType().toString()+stone.getX()+","+stone.getY();
+        else
+            return "S";
     }
 }

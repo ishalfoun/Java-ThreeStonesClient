@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,6 +16,7 @@ import java.nio.file.Files;
  */
 public class ThreeStonesBoard {
     
+    Logger l = Logger.getLogger(ClientGame.class.getName());
     private Tile[][] board;
     private int size;
     
@@ -48,13 +51,16 @@ public class ThreeStonesBoard {
     }
     
     public void placeStone(Stone stone) {
-        if(board[stone.getX()][stone.getY()].isPlayable()){
-            Slot slot = (Slot) board[stone.getX()][stone.getY()];
+        if(board[stone.getY()][stone.getX()].isPlayable()){
+            Slot slot = (Slot) board[stone.getY()][stone.getX()];
             slot.placeStone(stone);
+            board[stone.getY()][stone.getX()] = slot;
             
+        l.log(Level.INFO, "Placed at "+ stone.getY() + " " + stone.getX());
+        l.log(Level.INFO, "tostring is:" + board[stone.getY()][stone.getX()].toString());
         }
     }
-    
+
     public void fillBoardFromCSV(String pathToCSV){
         
         BufferedReader br = null;
@@ -70,11 +76,9 @@ public class ThreeStonesBoard {
                 for(int i = 0; i < 11; i++){
                     if(lines[i].equals("f")){
                         board[index][i] = new Flat(index,i);
-                        System.out.print("Made a flat");
                     }
                     if(lines[i].equals("s")){
                         board[index][i] = new Slot(index,i);
-                        System.out.print("made a slot");
                     }
                 }
                 index++;    

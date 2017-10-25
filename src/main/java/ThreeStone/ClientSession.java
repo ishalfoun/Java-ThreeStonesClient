@@ -30,9 +30,8 @@ public class ClientSession {
     public ClientSession (Socket socket) throws IOException
     {
         this.socket=socket;
-        this.in = socket.getInputStream();
-        this.out = socket.getOutputStream();
         this.packetSize=4;
+        byteBuffer = new byte[packetSize];
     }
     
     /**
@@ -44,6 +43,7 @@ public class ClientSession {
      */
     public ArrayList<Object> receivePacket() throws IOException
     {
+        in = socket.getInputStream();
         int totalBytesRcvd = 0;      // Total bytes received so far
         int bytesRcvd;        // Bytes received in last read
         while (totalBytesRcvd < packetSize)
@@ -58,7 +58,7 @@ public class ClientSession {
         //int score = (int)byteBuffer[3];
         
         System.out.println("Received: opcode:"+opcode.getValue()+" x="+x+" y="+y);
-        return new ArrayList<>(Arrays.asList(new Stone(x,y, PlayerType.PLAYER), opcode));
+        return new ArrayList<>(Arrays.asList(new Stone(x,y, PlayerType.COMPUTER), opcode));
     }
      
     
@@ -71,6 +71,7 @@ public class ClientSession {
      */
     public void sendPacket(Stone stone, Opcode opcode) throws IOException 
     {    
+        out = socket.getOutputStream();
         switch(opcode)
         {
             case REQ_GAME_START:
@@ -82,7 +83,7 @@ public class ClientSession {
             {
                 if (stone==null)
                     throw new IllegalArgumentException();
-                byteBuffer = new byte[]{(byte)Opcode.CLIENT_PLACE.getValue(), (byte)stone.getX(), (byte)stone.getY(), 0b0};
+                byteBuffer = new byte[]{(byte)Opcode.CLIENT_PLACE.getValue(), (byte)stone.getY(), (byte)stone.getX(), 0b0};
                 break;
             }
             case ACK_PLAY_AGAIN:
@@ -101,7 +102,7 @@ public class ClientSession {
     
     public static void main (String args[]) throws IOException
     {
-        
+        /*
         Scanner sc=new Scanner(System.in);  
         System.out.println("Welcome! Please enter <Server> to start game");  
         sc.next();
@@ -111,12 +112,12 @@ public class ClientSession {
         ClientSession isi = new ClientSession( new Socket(server, servPort));
 
         System.out.println("sending a packet");
-        isi.sendPacket(new Stone(3,4, PlayerType.PLAYER), Opcode.CLIENT_PLACE);
+        //isi.sendPacket(new Stone(3,4, PlayerType.PLAYER), Opcode.CLIENT_PLACE);
     
         System.out.println("waiting to receive packet");
         ArrayList<Object> recvd = isi.receivePacket();
         
-        
+        */
     }
     
 }
