@@ -58,7 +58,7 @@ public class ClientSession {
         //int score = (int)byteBuffer[3];
         
         System.out.println("Received: opcode:"+opcode.getValue()+" x="+x+" y="+y);
-        return new ArrayList<>(Arrays.asList(new Stone(x,y, PlayerType.PLAYER), opcode));
+        return new ArrayList<>(Arrays.asList(new Stone(x,y, PlayerType.COMPUTER), opcode));
     }
      
     
@@ -83,7 +83,7 @@ public class ClientSession {
             {
                 if (stone==null)
                     throw new IllegalArgumentException();
-                byteBuffer = new byte[]{(byte)Opcode.CLIENT_PLACE.getValue(), (byte)stone.getX(), (byte)stone.getY(), 0b0};
+                byteBuffer = new byte[]{(byte)Opcode.CLIENT_PLACE.getValue(), (byte)stone.getY(), (byte)stone.getX(), 0b0};
                 break;
             }
             case ACK_PLAY_AGAIN:

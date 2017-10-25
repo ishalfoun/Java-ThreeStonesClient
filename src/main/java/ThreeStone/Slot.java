@@ -39,4 +39,11 @@ public class Slot extends Tile {
     public boolean hasStone() {
         return stone != null;
     }
+    
+    public String toString(){
+        if (stone!=null)
+            return stone.getType().toString()+stone.getX()+","+stone.getY();
+        else
+            return "S";
+    }
 }
