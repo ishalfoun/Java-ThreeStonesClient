@@ -15,6 +15,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -188,6 +190,9 @@ public class ClientGame {
             for (int j = 0; j < 11; j++) {
                 String toPrint = boardModel.getBoard()[i][j].toString();
                 table.setValueAt(toPrint, i, j);
+                scoreText = "User:" + scoreUser + " Server:" + scoreComp;
+                scoreLabel.setText(scoreText);
+                
             }
         }
     }
@@ -208,11 +213,16 @@ public class ClientGame {
             for (int j = 0; j < 11; j++) {
                 String toPrint = boardModel.getBoard()[i][j].toString();
                 table.setValueAt(toPrint, i, j);
+                //paintIcon(table, ("Images/computerStone.png"), i, j);
+                //table.setValueAt(new JLabel(new ImageIcon("Images/computerStone.png")), i, j);
+                //Component cell = table.getComponentAt(i, j);
+                //cell.
             }
         }
         scoreText = "User:" + scoreUser + " Server:" + scoreComp;
         scoreLabel = new JLabel(scoreText);
         scoreLabel.setBounds(10, 10, 100, 30);
+        
 
         JPanel panel = new JPanel();
         table.setBounds(20, 20, 800, 600);
