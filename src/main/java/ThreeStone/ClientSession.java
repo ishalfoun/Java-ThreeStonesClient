@@ -37,6 +37,10 @@ public class ClientSession {
         byteBuffer = new byte[packetSize];
     }
     
+    public void closeSocket() throws IOException
+    {
+        socket.close();
+    }
     /**
      * Waits until it receives one Packet.
      * then returns the stone and opcode as a list
