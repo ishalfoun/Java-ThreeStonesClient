@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -53,10 +54,10 @@ public class ClientGame {
         boardModel.fillBoardFromCSV("src/main/resources/board.csv");
     }
 
-    public void initConnection() throws IOException {
+    public void initConnection(String server) throws IOException {
         l.log(Level.INFO, "user initiated connection");
 
-        String server = "10.230.119.125";
+        //String server = "10.230.119.125";
         int servPort = 50000;
         connection = new ClientSession(new Socket(server, servPort));
 
@@ -69,6 +70,7 @@ public class ClientGame {
         menuFrame.setTitle("Three Stones Online");
         menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        String server = JOptionPane.showInputDialog(frame,"what ip do you want to connect to");
         l.log(Level.INFO, "Drawing menu");
         JButton startGameBtn = new JButton("Start Game");
         startGameBtn.addActionListener(new ActionListener() {
@@ -80,7 +82,7 @@ public class ClientGame {
 
                 l.log(Level.INFO, "user clicked to start");
                 try {
-                    initConnection();
+                    initConnection(server);
                     if (waitForResponse()) {
                         setClickListeners(table);
                     }

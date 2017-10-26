@@ -81,7 +81,6 @@ public class ThreeStonesBoard {
                     }
                 }
                 index++;    
-                System.out.println("new line");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
