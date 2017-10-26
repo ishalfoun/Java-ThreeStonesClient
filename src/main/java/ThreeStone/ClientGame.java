@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -44,11 +45,22 @@ public class ClientGame {
     String scoreText;
     JButton quitGameBtn;
         ArrayList<Object> recvd;
+        MouseListener listen;
 
     Logger l = Logger.getLogger(ClientGame.class.getName());
 
     public ClientGame() throws IOException {
         l.log(Level.INFO, "Starting Game");
+        listen=new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = table.rowAtPoint(evt.getPoint());
+                int col = table.columnAtPoint(evt.getPoint());
+                if (row >= 0 && col >= 0) {
+                    sendStone(row, col);
+                }
+            }
+        };
         setUpGameBoard();
         drawMenu();
         // if user clicks on start, the connection is started
@@ -69,7 +81,15 @@ public class ClientGame {
     public void close() throws IOException
     {
         connection.closeSocket();
-        boardFrame.dispose();
+        menuFrame.dispose();
+        if (boardFrame != null)
+        {
+            boardFrame.dispose();
+        }
+        if (gameOverframe !=null)
+        {
+         gameOverframe.dispose()   ;
+        }
     }
     public void drawMenu() {
         JFrame.setDefaultLookAndFeelDecorated(true);
@@ -94,7 +114,7 @@ public class ClientGame {
 
                 l.log(Level.INFO, "user clicked to start");
                 if (waitForResponse()) {
-                    setClickListeners(table);
+                    setClickListeners();
                 }
                 l.log(Level.INFO, "waiting for response error");
 
@@ -129,7 +149,7 @@ public class ClientGame {
         if (waitForResponse()) {
             setUpGameBoard();
             drawBoard();
-            setClickListeners(table);
+            setClickListeners();
         }
     }
 
@@ -154,8 +174,18 @@ public class ClientGame {
         });
         
         JPanel panel = new JPanel();
+        String winner;
+        if (scoreUser>scoreComp)
+        {
+            winner = "You won!";
+        }else if(scoreComp>scoreUser)
+        {
+            winner = "The Computer won.";
+        }
+        else
+            winner = "The Game ended in a Draw";
         
-        JLabel label = new JLabel("GAME OVER! The Winner is: "+/*+(scoreUser>scoreComp)?"User":"Computer"+*/" Play Again?");
+        JLabel label = new JLabel("GAME OVER! "+winner + "\nPlay Again?");
         label.setBounds(50, 100, 100, 30);
         panel.add(label);
         panel.add(restartBtn);
@@ -167,6 +197,7 @@ public class ClientGame {
 
     public boolean waitForResponse() {
         l.log(Level.INFO, "waiting for ACK_GAME_START");
+        disableClickListeners();
         try {
             recvd = connection.receivePacket();
             if (recvd.get(1) == Opcode.ACK_GAME_START) {
@@ -183,6 +214,10 @@ public class ClientGame {
         return false;
     }
 
+    
+    public void disableClickListeners() {
+        table.removeMouseListener(listen);
+    }
     public void redrawBoard() {
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
@@ -210,6 +245,8 @@ public class ClientGame {
                 table.setValueAt(toPrint, i, j);
             }
         }
+         scoreUser = 0;
+         scoreComp =0;
         scoreText = "User:" + scoreUser + " Server:" + scoreComp;
         scoreLabel = new JLabel(scoreText);
         scoreLabel.setBounds(10, 10, 100, 30);
@@ -223,28 +260,18 @@ public class ClientGame {
         boardFrame.setVisible(true);
     }
 
-    public void setClickListeners(JTable table) {
-        table.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int row = table.rowAtPoint(evt.getPoint());
-                int col = table.columnAtPoint(evt.getPoint());
-                if (row >= 0 && col >= 0) {
-                    sendStone(row, col);
-                }
-            }
-        });
+    public void setClickListeners() {
+        table.addMouseListener(listen);
     }
 
     public void sendStone(int row, int col) {
         clientStone = new Stone(col, row, PlayerType.PLAYER);
-        l.log(Level.INFO, "sending stone (" + col + "," + row + ")");
         try {
+            l.log(Level.INFO, "sending stone (" + col + "," + row + ")");
             connection.sendPacket(clientStone, Opcode.CLIENT_PLACE);
         } catch (IOException ex) {
             l.log(Level.INFO, "sending error");
         }
-        l.log(Level.INFO, "send successful");
         receiveStone();
     }
 
@@ -261,6 +288,7 @@ public class ClientGame {
                 scoreComp = (int) recvd.get(3);
                 
                 l.log(Level.INFO, "RECEIVED SERVER_PLACE(" + stone.getX() + "," + stone.getY() + ") Score=(" + scoreUser + "," + scoreComp + ")");
+                scoreText = "User:" + scoreUser + " Server:" + scoreComp;
                 scoreLabel.setText(scoreText);
                 
                 boardModel.placeStone(stone);

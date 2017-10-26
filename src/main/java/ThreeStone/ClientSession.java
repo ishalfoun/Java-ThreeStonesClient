@@ -55,11 +55,9 @@ public class ClientSession {
         int bytesRcvd;        // Bytes received in last read
         while (totalBytesRcvd < packetSize)
         {
-        l.log(Level.INFO, "inside while-loop");
           if ( (bytesRcvd = in.read(byteBuffer, totalBytesRcvd,   packetSize - totalBytesRcvd)) == -1)
             throw new SocketException("Connection closed prematurely");
           totalBytesRcvd += bytesRcvd;
-            l.log(Level.INFO, "outside while-loop");
         }
         Opcode opcode= Opcode.values()[(int)byteBuffer[0]];
         int x = (int)byteBuffer[1];

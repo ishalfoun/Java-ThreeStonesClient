@@ -40,10 +40,13 @@ public class Slot extends Tile {
         return stone != null;
     }
     
+    @Override
     public String toString(){
         if (stone!=null)
             if (stone.getType()==PlayerType.COMPUTER)
                 return "[C]";
+            else if (stone.getType()==PlayerType.COMPUTER_LASTPLACE)
+                return "_C_";
             else
                 return "[P]";
         else

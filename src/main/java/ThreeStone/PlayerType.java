@@ -10,5 +10,5 @@ package ThreeStone;
  * @author 1542745
  */
 public enum PlayerType {
-    COMPUTER, PLAYER
+    COMPUTER, PLAYER, COMPUTER_LASTPLACE
 }
