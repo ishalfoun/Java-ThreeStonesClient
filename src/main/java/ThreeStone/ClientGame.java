@@ -5,6 +5,9 @@
  */
 package ThreeStone;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -18,6 +21,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.table.TableCellEditor;
 
 /**
  *
@@ -191,12 +196,26 @@ public class ClientGame {
         table = new JTable(boardModel.getSize(), boardModel.getSize());
         table.setRowSelectionAllowed(false);
         table.setColumnSelectionAllowed(false);
-
+        table.setRowHeight(55);
+        table.setDefaultRenderer(Color.class, new ColorRenderer(true));
+        frame.setPreferredSize(new Dimension(800,600));
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
                 String toPrint = boardModel.getBoard()[i][j].toString();
-                //JButton spot = new JButton();
-                table.setValueAt(toPrint, i, j);
+                switch(toPrint){
+                    case "flat":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "slot":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "playerStone":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "computerStone":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                }
             }
         }
         boardFrame.add(table);
@@ -213,6 +232,7 @@ public class ClientGame {
                 int col = table.columnAtPoint(evt.getPoint());
                 if (row >= 0 && col >= 0) {
                     sendStone(row, col);
+                    refreshBoard(table, boardModel);
                 }
             }
 
@@ -229,6 +249,9 @@ public class ClientGame {
         } catch (IOException ex) {
             l.log(Level.INFO, "sending error");
         }
+
+        //boardModel.placeStone(stone);
+        l.log(Level.INFO, "send successful");
 
         receiveStone();
 
@@ -260,4 +283,33 @@ public class ClientGame {
 
         redrawBoard();
     }
+    
+    
+    public void refreshBoard(JTable table, ThreeStonesBoard board){
+        System.out.println("Refreshed the board");
+        for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 11; j++) {
+                String toPrint = board.getBoard()[i][j].toString();
+                switch(toPrint){
+                    case "flat":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "slot":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "playerStone":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                    case "computerStone":
+                        table.setValueAt(toPrint, i, j);
+                        break;
+                }
+
+                
+            }
+        }
+        System.out.println("done refreshing the board");
+    }
+    
+    
 }
