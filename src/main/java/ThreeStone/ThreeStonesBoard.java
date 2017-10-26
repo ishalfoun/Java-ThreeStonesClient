@@ -55,9 +55,8 @@ public class ThreeStonesBoard {
             Slot slot = (Slot) board[stone.getY()][stone.getX()];
             slot.placeStone(stone);
             board[stone.getY()][stone.getX()] = slot;
-            
-        l.log(Level.INFO, "Placed at "+ stone.getY() + " " + stone.getX());
-        l.log(Level.INFO, "tostring is:" + board[stone.getY()][stone.getX()].toString());
+       // l.log(Level.INFO, "Placed at "+ stone.getY() + " " + stone.getX());
+        //l.log(Level.INFO, "tostring is:" + board[stone.getY()][stone.getX()].toString());
         }
     }
 

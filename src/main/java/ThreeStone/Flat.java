@@ -26,6 +26,6 @@ public class Flat extends Tile{
     }
     
     public String toString(){
-        return "flat";
+        return "";
     }
 }

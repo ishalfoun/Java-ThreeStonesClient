@@ -12,6 +12,8 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +27,7 @@ public class ClientSession {
     private OutputStream out;
     private byte[] byteBuffer;
     private int packetSize;
+    Logger l = Logger.getLogger(ClientGame.class.getName());
     
     //constructor
     public ClientSession (Socket socket) throws IOException
@@ -48,16 +51,18 @@ public class ClientSession {
         int bytesRcvd;        // Bytes received in last read
         while (totalBytesRcvd < packetSize)
         {
+        l.log(Level.INFO, "inside while-loop");
           if ( (bytesRcvd = in.read(byteBuffer, totalBytesRcvd,   packetSize - totalBytesRcvd)) == -1)
             throw new SocketException("Connection closed prematurely");
           totalBytesRcvd += bytesRcvd;
+            l.log(Level.INFO, "outside while-loop");
         }
         Opcode opcode= Opcode.values()[(int)byteBuffer[0]];
         int x = (int)byteBuffer[1];
         int y = (int)byteBuffer[2];
         //int score = (int)byteBuffer[3];
         
-        System.out.println("Received: opcode:"+opcode.getValue()+" x="+x+" y="+y);
+        //System.out.println("Received: opcode:"+opcode.getValue()+" x="+y+" y="+x);
         return new ArrayList<>(Arrays.asList(new Stone(x,y, PlayerType.COMPUTER), opcode));
     }
      
@@ -83,7 +88,7 @@ public class ClientSession {
             {
                 if (stone==null)
                     throw new IllegalArgumentException();
-                byteBuffer = new byte[]{(byte)Opcode.CLIENT_PLACE.getValue(), (byte)stone.getY(), (byte)stone.getX(), 0b0};
+                byteBuffer = new byte[]{(byte)Opcode.CLIENT_PLACE.getValue(), (byte)stone.getX(), (byte)stone.getY(), 0b0};
                 break;
             }
             case ACK_PLAY_AGAIN:

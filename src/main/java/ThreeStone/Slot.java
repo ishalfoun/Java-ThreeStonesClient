@@ -42,8 +42,11 @@ public class Slot extends Tile {
     
     public String toString(){
         if (stone!=null)
-            return stone.getType().toString()+stone.getX()+","+stone.getY();
+            if (stone.getType()==PlayerType.COMPUTER)
+                return "[C]";
+            else
+                return "[P]";
         else
-            return "S";
+            return "[ ]";
     }
 }
