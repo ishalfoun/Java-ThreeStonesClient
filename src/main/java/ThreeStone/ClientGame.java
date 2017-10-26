@@ -214,7 +214,7 @@ public class ClientGame {
         table.setRowSelectionAllowed(false);
         table.setColumnSelectionAllowed(false);
         table.setRowHeight(55);
-        table.setDefaultRenderer(Color.class, new ColorRenderer(true));
+        //table.setDefaultRenderer(Color.class, new ColorRenderer(true));
 
         
         boardFrame.setPreferredSize(new Dimension(800, 600));
