@@ -186,7 +186,7 @@ public class ClientGame {
             }
         }
 
-        scoreLabel.setText(scoreText);
+       // scoreLabel.setText(scoreText);
         
         //frame.add(table);
         //frame.pack();
@@ -215,14 +215,12 @@ public class ClientGame {
         scoreText = "User:"+scoreUser+" Server:"+scoreComp;
         scoreLabel = new JLabel(scoreText);
         scoreLabel.setBounds(10, 10, 100, 30);
-        /* JLabel label = new JLabel("GAME OVER! Play Again?");
         
-        panel.add(label);
-        panel.add(restartBtn);
-        panel.add(exitBtn);
-        */
-        boardFrame.add(scoreLabel);
-        boardFrame.add(table);
+        JPanel panel = new JPanel();
+        table.setBounds(20, 20, 800, 600);
+        panel.add(scoreLabel);
+        panel.add(table);
+        boardFrame.add(panel);
         boardFrame.pack();
         boardFrame.setVisible(true);
 
@@ -236,7 +234,6 @@ public class ClientGame {
                 int col = table.columnAtPoint(evt.getPoint());
                 if (row >= 0 && col >= 0) {
                     sendStone(row, col);
-                   // refreshBoard(table, boardModel);
                 }
             }
 
