@@ -33,7 +33,7 @@ public class ClientSession {
     public ClientSession (Socket socket) throws IOException
     {
         this.socket=socket;
-        this.packetSize=4;
+        this.packetSize=5;
         byteBuffer = new byte[packetSize];
     }
     
@@ -60,10 +60,12 @@ public class ClientSession {
         Opcode opcode= Opcode.values()[(int)byteBuffer[0]];
         int x = (int)byteBuffer[1];
         int y = (int)byteBuffer[2];
+        int scoreUser = (int)byteBuffer[3];
+        int scoreComp = (int)byteBuffer[4];
         //int score = (int)byteBuffer[3];
         
         //System.out.println("Received: opcode:"+opcode.getValue()+" x="+y+" y="+x);
-        return new ArrayList<>(Arrays.asList(new Stone(x,y, PlayerType.COMPUTER), opcode));
+        return new ArrayList<>(Arrays.asList(new Stone(x,y, PlayerType.COMPUTER), opcode, scoreUser, scoreComp));
     }
      
     
@@ -81,19 +83,19 @@ public class ClientSession {
         {
             case REQ_GAME_START:
             {
-                byteBuffer = new byte[]{(byte)Opcode.REQ_GAME_START.getValue(), 0b0, 0b0, 0b0};
+                byteBuffer = new byte[]{(byte)Opcode.REQ_GAME_START.getValue(), 0b0, 0b0, 0b0, 0b0};
                 break;
             }
             case CLIENT_PLACE:
             {
                 if (stone==null)
                     throw new IllegalArgumentException();
-                byteBuffer = new byte[]{(byte)Opcode.CLIENT_PLACE.getValue(), (byte)stone.getX(), (byte)stone.getY(), 0b0};
+                byteBuffer = new byte[]{(byte)Opcode.CLIENT_PLACE.getValue(), (byte)stone.getX(), (byte)stone.getY(), 0b0, 0b0};
                 break;
             }
             case ACK_PLAY_AGAIN:
             {
-                byteBuffer = new byte[]{(byte)Opcode.ACK_PLAY_AGAIN.getValue(), 0b0, 0b0, 0b0};
+                byteBuffer = new byte[]{(byte)Opcode.ACK_PLAY_AGAIN.getValue(), 0b0, 0b0, 0b0, 0b0};
                 break;   
             }
             default:

@@ -39,6 +39,9 @@ public class ClientGame {
     JTable table;
     JFrame frame, gameOverframe, menuFrame, boardFrame;
     Stone rememberStone;
+    int scoreUser, scoreComp;
+    JLabel scoreLabel;
+    String scoreText;
 
     Logger l = Logger.getLogger(ClientGame.class.getName());
 
@@ -183,6 +186,8 @@ public class ClientGame {
             }
         }
 
+        scoreLabel.setText(scoreText);
+        
         //frame.add(table);
         //frame.pack();
         //frame.setVisible(true);
@@ -200,26 +205,23 @@ public class ClientGame {
         table.setColumnSelectionAllowed(false);
         table.setRowHeight(55);
         table.setDefaultRenderer(Color.class, new ColorRenderer(true));
-        frame.setPreferredSize(new Dimension(800,600));
+        boardFrame.setPreferredSize(new Dimension(800,600));
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
                 String toPrint = boardModel.getBoard()[i][j].toString();
-                switch(toPrint){
-                    case "flat":
                         table.setValueAt(toPrint, i, j);
-                        break;
-                    case "slot":
-                        table.setValueAt(toPrint, i, j);
-                        break;
-                    case "playerStone":
-                        table.setValueAt(toPrint, i, j);
-                        break;
-                    case "computerStone":
-                        table.setValueAt(toPrint, i, j);
-                        break;
-                }
             }
         }
+        scoreText = "User:"+scoreUser+" Server:"+scoreComp;
+        scoreLabel = new JLabel(scoreText);
+        scoreLabel.setBounds(10, 10, 100, 30);
+        /* JLabel label = new JLabel("GAME OVER! Play Again?");
+        
+        panel.add(label);
+        panel.add(restartBtn);
+        panel.add(exitBtn);
+        */
+        boardFrame.add(scoreLabel);
         boardFrame.add(table);
         boardFrame.pack();
         boardFrame.setVisible(true);
@@ -234,7 +236,7 @@ public class ClientGame {
                 int col = table.columnAtPoint(evt.getPoint());
                 if (row >= 0 && col >= 0) {
                     sendStone(row, col);
-                    refreshBoard(table, boardModel);
+                   // refreshBoard(table, boardModel);
                 }
             }
 
@@ -269,7 +271,9 @@ public class ClientGame {
             }
             if (recvd.get(1) == Opcode.SERVER_PLACE) {
                 stone = (Stone) recvd.get(0);
-                l.log(Level.INFO, "RECEIVED SERVER_PLACE(" + stone.getX() + "," + stone.getY() + ")");
+                scoreUser= (int) recvd.get(2);
+                scoreComp= (int) recvd.get(3);
+                l.log(Level.INFO, "RECEIVED SERVER_PLACE(" + stone.getX() + "," + stone.getY() + ") Score=("+scoreUser+","+scoreComp+")");
                 boardModel.placeStone(stone);
                 boardModel.placeStone(clientStone);
                 rememberStone = stone;
@@ -286,32 +290,6 @@ public class ClientGame {
         redrawBoard();
     }
     
-    
-    public void refreshBoard(JTable table, ThreeStonesBoard board){
-        System.out.println("Refreshed the board");
-        for (int i = 0; i < 11; i++) {
-            for (int j = 0; j < 11; j++) {
-                String toPrint = board.getBoard()[i][j].toString();
-                switch(toPrint){
-                    case "flat":
-                        table.setValueAt(toPrint, i, j);
-                        break;
-                    case "slot":
-                        table.setValueAt(toPrint, i, j);
-                        break;
-                    case "playerStone":
-                        table.setValueAt(toPrint, i, j);
-                        break;
-                    case "computerStone":
-                        table.setValueAt(toPrint, i, j);
-                        break;
-                }
-
-                
-            }
-        }
-        System.out.println("done refreshing the board");
-    }
     
     
 }
