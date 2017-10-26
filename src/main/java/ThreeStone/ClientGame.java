@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -47,10 +48,10 @@ public class ClientGame {
         // if user clicks on start, the connection is started
     }
 
-    public void initConnection() throws IOException {
+    public void initConnection(String server) throws IOException {
         l.log(Level.INFO, "user initiated connection");
 
-        String server = "10.230.119.125";
+        //String server = "10.230.119.125";
         int servPort = 50000;
         connection = new ClientSession(new Socket(server, servPort));
 
@@ -63,7 +64,7 @@ public class ClientGame {
         JFrame frame = new JFrame();
         frame.setTitle("Three Stones Online");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        String server = JOptionPane.showInputDialog(frame,"what ip do you want to connect to");
         l.log(Level.INFO, "Drawing menu");
         JButton startGameBtn = new JButton("Start Game");
         startGameBtn.addActionListener(new ActionListener() {
@@ -75,7 +76,7 @@ public class ClientGame {
 
                 l.log(Level.INFO, "user clicked to start");
                 try {
-                    initConnection();
+                    initConnection(server);
                     if (waitForResponse()) {
                         setClickListeners(table);
                     }
@@ -140,13 +141,13 @@ public class ClientGame {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //frame.setSize(800,800);
         
-        JTable table = new JTable(board.getSize(), board.getSize());
+        JTable table = new JTable(boardModel.getSize(), boardModel.getSize());
         table.setRowHeight(55);
         table.setDefaultRenderer(Color.class, new ColorRenderer(true));
         frame.setPreferredSize(new Dimension(800,600));
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
-                String toPrint = board.getBoard()[i][j].toString();
+                String toPrint = boardModel.getBoard()[i][j].toString();
                 switch(toPrint){
                     case "flat":
                         table.setValueAt(toPrint, i, j);
