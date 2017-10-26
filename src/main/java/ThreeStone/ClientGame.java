@@ -16,7 +16,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -223,6 +226,9 @@ public class ClientGame {
             for (int j = 0; j < 11; j++) {
                 String toPrint = boardModel.getBoard()[i][j].toString();
                 table.setValueAt(toPrint, i, j);
+                scoreText = "User:" + scoreUser + " Server:" + scoreComp;
+                scoreLabel.setText(scoreText);
+                
             }
         }
     }
@@ -233,16 +239,28 @@ public class ClientGame {
         boardFrame.setTitle("Three Stones Online");
         boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        table = new JTable(boardModel.getSize(), boardModel.getSize());
+        table = new JTable(boardModel.getSize(), boardModel.getSize()){
+            @Override
+            public Class<?> getColumnClass(int columnIndex){
+                return Icon.class;
+            }
+        };
+        
         table.setRowSelectionAllowed(false);
         table.setColumnSelectionAllowed(false);
         table.setRowHeight(55);
-        table.setDefaultRenderer(Color.class, new ColorRenderer(true));
+        //table.setDefaultRenderer(Color.class, new ColorRenderer(true));
+
+        
         boardFrame.setPreferredSize(new Dimension(800, 600));
         for (int i = 0; i < 11; i++) {
+            //table.getColumnModel().getColumn(i).setCellRenderer(new IconRenderer());
             for (int j = 0; j < 11; j++) {
                 String toPrint = boardModel.getBoard()[i][j].toString();
-                table.setValueAt(toPrint, i, j);
+                //table.setValueAt(toPrint, i, j);
+                //paintIcon(table, ("Images/computerStone.png"), i, j);
+                table.setValueAt(new ImageIcon("Images/computerStone.png"), i, j);
+                
             }
         }
          scoreUser = 0;
@@ -250,6 +268,7 @@ public class ClientGame {
         scoreText = "User:" + scoreUser + " Server:" + scoreComp;
         scoreLabel = new JLabel(scoreText);
         scoreLabel.setBounds(10, 10, 100, 30);
+        
 
         JPanel panel = new JPanel();
         table.setBounds(20, 20, 800, 600);
