@@ -6,7 +6,7 @@
 package ThreeStone;
 
 /**
- *
+ *Defines players and computers. Used to tell if a stone was placed by the player or by the computer.
  * @author 1542745
  */
 public enum PlayerType {

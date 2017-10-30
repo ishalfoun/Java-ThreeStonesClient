@@ -26,9 +26,19 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellEditor;
 
 /**
- *
- * @author 1542745
+ *The ClientGame class handles drawing the board using JFrame.
+ * It handles retrieving user input and calling the appropriate ClientSession methods to send the users moves to the server and retrieve data from the server.
+ * 
+ * 
+ * 
+ * 
+ * @author Roan Chamberlain
  */
+
+
+
+
+
 public class ClientGame {
 
     ClientSession connection;
@@ -43,10 +53,15 @@ public class ClientGame {
     JLabel scoreLabel;
     String scoreText;
     JButton quitGameBtn;
-        ArrayList<Object> recvd;
+    ArrayList<Object> recvd;
 
     Logger l = Logger.getLogger(ClientGame.class.getName());
 
+    /**
+     * Instantiates the ClientGame and calls setUpGameBoard and drawMenu.
+     * 
+     * @throws IOException if a connection could not be made to the server 
+     */
     public ClientGame() throws IOException {
         l.log(Level.INFO, "Starting Game");
         setUpGameBoard();
@@ -54,11 +69,22 @@ public class ClientGame {
         // if user clicks on start, the connection is started
     }
 
+    
+    /**
+     * The setUpGameBoard method instanciates the ThreeStoneBoard object which represents the model for our view.
+     * It then fills the board from a csv file which defines the places on the board.
+     */
     public void setUpGameBoard() {
         boardModel = new ThreeStonesBoard(11);
         boardModel.fillBoardFromCSV("src/main/resources/board.csv");
     }
 
+    /**
+     * Initiates the connection to the server at the ip address specified by the user.
+     * 
+     * @param server The ip address of the server
+     * @throws IOException 
+     */
     public void initConnection(String server) throws IOException {
         //String server = "10.230.119.125";
         int servPort = 50000;
@@ -66,11 +92,20 @@ public class ClientGame {
         l.log(Level.INFO, "connection successful, server=" + server);
     }
 
+    /**
+     * Closes the connection with the server when the user does not want to play another game or decides to exit.
+     * 
+     * @throws IOException 
+     */
     public void close() throws IOException
     {
         connection.closeSocket();
         boardFrame.dispose();
     }
+    
+    /**
+     * The drawMenu button displays a menu to the user and gives them the option to start a game or to quit
+     */
     public void drawMenu() {
         JFrame.setDefaultLookAndFeelDecorated(true);
         menuFrame = new JFrame();
@@ -119,6 +154,10 @@ public class ClientGame {
         menuFrame.setVisible(true);
     }
 
+    
+    /**
+     * the restartGame method is used to call the method in the connection object to tell the server that the user wants to play another game.
+     */
     public void restartGame() {
         l.log(Level.INFO, "sending ack_play_again");
         try {
@@ -133,6 +172,11 @@ public class ClientGame {
         }
     }
 
+    
+    /**
+     * the gameOver method will display a jframe to tell the user tat the game has completed.
+     * the view will give the user the option to play another game or to quit the game. 
+     */
     public void gameOver() {
         l.log(Level.INFO, "Game Over");
 
@@ -165,6 +209,11 @@ public class ClientGame {
         gameOverframe.setVisible(true);
     }
 
+    
+    /**
+     * The waitForResponse method is used to wait for the server to send a packet back to the client once the user has sent a packet.
+     * @return 
+     */
     public boolean waitForResponse() {
         l.log(Level.INFO, "waiting for ACK_GAME_START");
         try {
@@ -183,6 +232,9 @@ public class ClientGame {
         return false;
     }
 
+    /**
+     * the redrawBoard method is used to refresh the view based on the board model. It should be called everytime that the user places a stone or when the server sends back a move.
+     */
     public void redrawBoard() {
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
@@ -192,6 +244,12 @@ public class ClientGame {
         }
     }
 
+    
+    /**
+     * the redraw board method is used to create the jframe where the game will be played and create the table that will represent the board. 
+     * it also draws the whole board.
+     * 
+     */
     public void drawBoard() {
         JFrame.setDefaultLookAndFeelDecorated(true);
         boardFrame = new JFrame();
@@ -202,7 +260,7 @@ public class ClientGame {
         table.setRowSelectionAllowed(false);
         table.setColumnSelectionAllowed(false);
         table.setRowHeight(55);
-        table.setDefaultRenderer(Color.class, new ColorRenderer(true));
+        //table.setDefaultRenderer(Color.class, new ColorRenderer(true));
         boardFrame.setPreferredSize(new Dimension(800, 600));
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
@@ -223,6 +281,12 @@ public class ClientGame {
         boardFrame.setVisible(true);
     }
 
+    
+    /**
+     * the setClickListeners method sets event handlers on all the cells in the table.
+     * 
+     * @param table  the board that the user needs to be able to click on.
+     */
     public void setClickListeners(JTable table) {
         table.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -236,6 +300,11 @@ public class ClientGame {
         });
     }
 
+    /**
+     * the send stone method gets called from the click listener on the cells and is used to send a message to the server that the user is attempting to make a move.
+     * @param row
+     * @param col 
+     */
     public void sendStone(int row, int col) {
         clientStone = new Stone(col, row, PlayerType.PLAYER);
         l.log(Level.INFO, "sending stone (" + col + "," + row + ")");
@@ -248,6 +317,10 @@ public class ClientGame {
         receiveStone();
     }
 
+    /**
+     * the recieveStone method is called after the user places a stone. it will wait for the server to send a packet and update the apporopriate fields in this calss to display the new move anf score.
+     *  
+     */
     public void receiveStone() {
         try {
             recvd = connection.receivePacket();

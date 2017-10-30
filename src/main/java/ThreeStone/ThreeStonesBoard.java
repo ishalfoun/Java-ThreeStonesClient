@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * The ThreeStonesBoard class defines the model that will be displayed in our view
  * @author Pengkim Sy
  */
 public class ThreeStonesBoard {
@@ -20,36 +20,45 @@ public class ThreeStonesBoard {
     private Tile[][] board;
     private int size;
     
+    /**
+     * Constructor used to define the board.
+     * It instanciates a 2d array if tiles representing the games board.
+     * @param size the size of the board to be created.
+     */
     public ThreeStonesBoard(int size) {
         this.size = size;
         this.board = new Tile[size][size];
     }
     
+    /**
+     * alternate constructor to create a board based on a 2d array of tiles.
+     * @param board 
+     */
     public ThreeStonesBoard(Tile[][] board) {
         this.board = board;
     }
 
+    /**
+     * getter to return the objects board.
+     * @return 
+     */
     public Tile[][] getBoard() {
         return board;
     }
 
+    /**
+     * getter to retrieve the size of the board
+     */
     public int getSize() {
         return this.size;
     }
+
     
     
-    public List<Tile> getPlayableSlot(Stone stone) {
-        List<Tile> playableSlot = new ArrayList<>();
-//        for(int i=0; i<this.board.length; i++) {
-//            for(int j=0; j<this.board.length; j++) {
-//                if(board[i][j].isPlayable() && !board[i][j].hasStone()) {
-//                    playableSlot.add(board[i][j]);
-//                }
-//            }
-//        }
-        return playableSlot;
-    }
-    
+    /**
+     * the placeStone method is used to update the board model with new stones
+     * @param stone stone object that contains where it is to be placed on the board.
+     */
     public void placeStone(Stone stone) {
         if(board[stone.getY()][stone.getX()].isPlayable()){
             Slot slot = (Slot) board[stone.getY()][stone.getX()];
@@ -60,6 +69,11 @@ public class ThreeStonesBoard {
         }
     }
 
+    
+    /**
+     * the fillBoardFromCSV method is used to fill the 2d tile array with the appropriate tiles based on a specified csv file. 
+     * @param pathToCSV path the the file containing layout of the board before the game is to be played.
+     */
     public void fillBoardFromCSV(String pathToCSV){
         
         BufferedReader br = null;
