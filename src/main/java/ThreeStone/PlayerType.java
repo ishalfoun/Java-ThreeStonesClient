@@ -6,8 +6,8 @@
 package ThreeStone;
 
 /**
- *
- * @author 1542745
+ * Defines the different playerTypes that will be used in the stones
+ * @author Isaak Shalfoun, Roan Chamberlain, Pengkim Sy
  */
 public enum PlayerType {
     COMPUTER, PLAYER, COMPUTER_LASTPLACE

@@ -1,8 +1,8 @@
 package ThreeStone;
 
 /**
- *
- * @author KimHyonh
+ * Defines a stone that can have a playertype to be displayed on the board.
+ * @author Isaak Shalfoun, Roan Chamberlain, Pengkim Sy
  */
 public class Stone extends Tile {
     

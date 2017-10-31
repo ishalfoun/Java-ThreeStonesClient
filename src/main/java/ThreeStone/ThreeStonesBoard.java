@@ -3,16 +3,13 @@ package ThreeStone;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Pengkim Sy
+ * Defines the model for our board.
+ * 
+ * @author Isaak Shalfoun, Roan Chamberlain, Pengkim Sy
  */
 public class ThreeStonesBoard {
     
@@ -21,36 +18,38 @@ public class ThreeStonesBoard {
     private int size;
     private Stone lastStone;
     
+    /**
+     * constuctor to instantiate the size of the board and the 2d array of tiles that represent the board
+     * @param size 
+     */
     public ThreeStonesBoard(int size) {
         this.size = size;
         this.board = new Tile[size][size];
     }
-    
+        
     public ThreeStonesBoard(Tile[][] board) {
         this.board = board;
     }
 
+    /**
+     * returns the model
+     * @return 
+     */
     public Tile[][] getBoard() {
         return board;
     }
-
+/**
+ * getter for the size of the board
+ * @return 
+ */
     public int getSize() {
         return this.size;
     }
-    
-    
-    public List<Tile> getPlayableSlot(Stone stone) {
-        List<Tile> playableSlot = new ArrayList<>();
-//        for(int i=0; i<this.board.length; i++) {
-//            for(int j=0; j<this.board.length; j++) {
-//                if(board[i][j].isPlayable() && !board[i][j].hasStone()) {
-//                    playableSlot.add(board[i][j]);
-//                }
-//            }
-//        }
-        return playableSlot;
-    }
-    
+        
+    /**
+     * updates the 2d array with a new stone
+     * @param stone 
+     */
     public void placeStone(Stone stone) {
         if(board[stone.getY()][stone.getX()].isPlayable()){
             Slot slot = (Slot) board[stone.getY()][stone.getX()];
@@ -72,6 +71,10 @@ public class ThreeStonesBoard {
         }
     }
 
+    /**
+     * loads the 2d tile array based on the values in the csv file that represents the board
+     * @param pathToCSV 
+     */
     public void fillBoardFromCSV(String pathToCSV){
         
         BufferedReader br = null;

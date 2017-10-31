@@ -9,14 +9,9 @@ import java.io.IOException;
 import java.net.Socket;
 import javax.swing.*;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
- *
- * @author 1542745
+ * Starts the Game
+ * @author Isaak Shalfoun, Roan Chamberlain, Pengkim Sy
  */
 public class Main {
 
@@ -25,7 +20,6 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
 
-        
         ClientGame ddb = new ClientGame();
     }
 

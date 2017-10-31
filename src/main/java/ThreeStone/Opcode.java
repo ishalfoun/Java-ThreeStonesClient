@@ -6,8 +6,8 @@
 package ThreeStone;
 
 /**
- *
- * @author 1241616
+ * Defines the opcodes that will be used in the packets
+ * @author Isaak Shalfoun, Roan Chamberlain, Pengkim Sy
  */
 public enum Opcode {
    REQ_GAME_START(0),

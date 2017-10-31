@@ -1,8 +1,8 @@
 package ThreeStone;
 
 /**
- *
- * @author Pengkim Sy
+ * Defines a playable slot in the board that will contain a stone object
+ * @author Isaak Shalfoun, Roan Chamberlain, Pengkim Sy
  */
 public class Slot extends Tile {
 
@@ -50,6 +50,6 @@ public class Slot extends Tile {
             else
                 return "[P]";
         else
-            return "[ ]";
+            return "[   ]";
     }
 }

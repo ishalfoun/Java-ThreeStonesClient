@@ -1,26 +1,20 @@
 package ThreeStone;
 
-import ThreeStone.Opcode;
-import ThreeStone.PlayerType;
-import ThreeStone.Stone;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author i
+ * Handles communication with the server including sending an receiving.
+ * 
+ * @author Isaak Shalfoun, Roan Chamberlain, Pengkim Sy
  */
 public class ClientSession {
-    
     
     private Socket socket;
     private InputStream in;
@@ -29,23 +23,31 @@ public class ClientSession {
     private int packetSize;
     Logger l = Logger.getLogger(ClientGame.class.getName());
     
-    //constructor
+    /**
+     * Constructor receives a socket to start the communication
+     * @param socket
+     * @throws IOException 
+     */
     public ClientSession (Socket socket) throws IOException
     {
         this.socket=socket;
         this.packetSize=5;
         byteBuffer = new byte[packetSize];
     }
-    
+    /**
+     * Closes the socket
+     * @throws IOException 
+     */
     public void closeSocket() throws IOException
     {
         socket.close();
     }
+    
     /**
      * Waits until it receives one Packet.
-     * then returns the stone and opcode as a list
+     * then returns the stone, opcode and score as a listobject
      * 
-     * @return List of [Stone, opcode]
+     * @return List of [Stone, opcode, scoreUser, scoreComp]
      * @throws IOException 
      */
     public ArrayList<Object> receivePacket() throws IOException
@@ -107,26 +109,6 @@ public class ClientSession {
         
         out.write(byteBuffer);
     }
-    
-    
-    public static void main (String args[]) throws IOException
-    {
-        /*
-        Scanner sc=new Scanner(System.in);  
-        System.out.println("Welcome! Please enter <Server> to start game");  
-        sc.next();
-        String server = "192.168.12.104";
-        int servPort = 7;
-
-        ClientSession isi = new ClientSession( new Socket(server, servPort));
-
-        System.out.println("sending a packet");
-        //isi.sendPacket(new Stone(3,4, PlayerType.PLAYER), Opcode.CLIENT_PLACE);
-    
-        System.out.println("waiting to receive packet");
-        ArrayList<Object> recvd = isi.receivePacket();
         
-        */
-    }
     
 }

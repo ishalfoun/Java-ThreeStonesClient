@@ -1,8 +1,8 @@
 package ThreeStone;
 
 /**
- *
- * @author Pengkim Sy
+ * Defines a wall on the board
+ * @author Isaak Shalfoun, Roan Chamberlain, Pengkim Sy
  */
 public class Flat extends Tile{
 
@@ -25,6 +25,7 @@ public class Flat extends Tile{
         return false;
     }
     
+    @Override
     public String toString(){
         return "";
     }

@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package ThreeStone;
 
 /**
- *
- * @author Pengkim Sy
+ * Used to define places on the board.
+ * @author Isaak Shalfoun, Roan Chamberlain, Pengkim Sy
  */
 public abstract class Tile {
     
