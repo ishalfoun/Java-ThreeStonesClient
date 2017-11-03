@@ -10,12 +10,16 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -54,6 +58,7 @@ public class ClientGame {
     String scoreText;
     JButton quitGameBtn;
     ArrayList<Object> recvd;
+    MouseListener listen;
 
     Logger l = Logger.getLogger(ClientGame.class.getName());
 
@@ -64,6 +69,16 @@ public class ClientGame {
      */
     public ClientGame() throws IOException {
         l.log(Level.INFO, "Starting Game");
+        listen=new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = table.rowAtPoint(evt.getPoint());
+                int col = table.columnAtPoint(evt.getPoint());
+                if (row >= 0 && col >= 0) {
+                    sendStone(row, col);
+                }
+            }
+        };
         setUpGameBoard();
         drawMenu();
         // if user clicks on start, the connection is started
@@ -100,7 +115,15 @@ public class ClientGame {
     public void close() throws IOException
     {
         connection.closeSocket();
-        boardFrame.dispose();
+        menuFrame.dispose();
+        if (boardFrame != null)
+        {
+            boardFrame.dispose();
+        }
+        if (gameOverframe !=null)
+        {
+         gameOverframe.dispose()   ;
+        }
     }
     
     /**
@@ -129,7 +152,7 @@ public class ClientGame {
 
                 l.log(Level.INFO, "user clicked to start");
                 if (waitForResponse()) {
-                    setClickListeners(table);
+                    setClickListeners();
                 }
                 l.log(Level.INFO, "waiting for response error");
 
@@ -168,7 +191,7 @@ public class ClientGame {
         if (waitForResponse()) {
             setUpGameBoard();
             drawBoard();
-            setClickListeners(table);
+            setClickListeners();
         }
     }
 
@@ -198,8 +221,18 @@ public class ClientGame {
         });
         
         JPanel panel = new JPanel();
+        String winner;
+        if (scoreUser>scoreComp)
+        {
+            winner = "You won!";
+        }else if(scoreComp>scoreUser)
+        {
+            winner = "The Computer won.";
+        }
+        else
+            winner = "The Game ended in a Draw";
         
-        JLabel label = new JLabel("GAME OVER! The Winner is: "+/*+(scoreUser>scoreComp)?"User":"Computer"+*/" Play Again?");
+        JLabel label = new JLabel("GAME OVER! "+winner + "\nPlay Again?");
         label.setBounds(50, 100, 100, 30);
         panel.add(label);
         panel.add(restartBtn);
@@ -216,6 +249,7 @@ public class ClientGame {
      */
     public boolean waitForResponse() {
         l.log(Level.INFO, "waiting for ACK_GAME_START");
+        disableClickListeners();
         try {
             recvd = connection.receivePacket();
             if (recvd.get(1) == Opcode.ACK_GAME_START) {
@@ -232,14 +266,23 @@ public class ClientGame {
         return false;
     }
 
+    public void disableClickListeners() {
+        table.removeMouseListener(listen);
+    }
+
     /**
-     * the redrawBoard method is used to refresh the view based on the board model. It should be called everytime that the user places a stone or when the server sends back a move.
+     * the redrawBoard method is used to refresh the view based on the board
+     * model. It should be called everytime that the user places a stone or when
+     * the server sends back a move.
      */
     public void redrawBoard() {
         for (int i = 0; i < 11; i++) {
             for (int j = 0; j < 11; j++) {
                 String toPrint = boardModel.getBoard()[i][j].toString();
                 table.setValueAt(toPrint, i, j);
+                scoreText = "User:" + scoreUser + " Server:" + scoreComp;
+                scoreLabel.setText(scoreText);
+                
             }
         }
     }
@@ -256,21 +299,35 @@ public class ClientGame {
         boardFrame.setTitle("Three Stones Online");
         boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        table = new JTable(boardModel.getSize(), boardModel.getSize());
+        table = new JTable(boardModel.getSize(), boardModel.getSize()){
+            @Override
+            public Class<?> getColumnClass(int columnIndex){
+                return Icon.class;
+            }
+        };
+        
         table.setRowSelectionAllowed(false);
         table.setColumnSelectionAllowed(false);
         table.setRowHeight(55);
         //table.setDefaultRenderer(Color.class, new ColorRenderer(true));
+
         boardFrame.setPreferredSize(new Dimension(800, 600));
         for (int i = 0; i < 11; i++) {
+            //table.getColumnModel().getColumn(i).setCellRenderer(new IconRenderer());
             for (int j = 0; j < 11; j++) {
                 String toPrint = boardModel.getBoard()[i][j].toString();
-                table.setValueAt(toPrint, i, j);
+                //table.setValueAt(toPrint, i, j);
+                //paintIcon(table, ("Images/computerStone.png"), i, j);
+                table.setValueAt(new ImageIcon("Images/computerStone.png"), i, j);
+                
             }
         }
+         scoreUser = 0;
+         scoreComp =0;
         scoreText = "User:" + scoreUser + " Server:" + scoreComp;
         scoreLabel = new JLabel(scoreText);
         scoreLabel.setBounds(10, 10, 100, 30);
+        
 
         JPanel panel = new JPanel();
         table.setBounds(20, 20, 800, 600);
@@ -281,13 +338,12 @@ public class ClientGame {
         boardFrame.setVisible(true);
     }
 
-    
     /**
      * the setClickListeners method sets event handlers on all the cells in the table.
      * 
      * @param table  the board that the user needs to be able to click on.
      */
-    public void setClickListeners(JTable table) {
+    /*public void setClickListeners(JTable table) {
         table.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -298,6 +354,9 @@ public class ClientGame {
                 }
             }
         });
+*/
+    public void setClickListeners() {
+        table.addMouseListener(listen);
     }
 
     /**
@@ -307,13 +366,12 @@ public class ClientGame {
      */
     public void sendStone(int row, int col) {
         clientStone = new Stone(col, row, PlayerType.PLAYER);
-        l.log(Level.INFO, "sending stone (" + col + "," + row + ")");
         try {
+            l.log(Level.INFO, "sending stone (" + col + "," + row + ")");
             connection.sendPacket(clientStone, Opcode.CLIENT_PLACE);
         } catch (IOException ex) {
             l.log(Level.INFO, "sending error");
         }
-        l.log(Level.INFO, "send successful");
         receiveStone();
     }
 
@@ -334,6 +392,7 @@ public class ClientGame {
                 scoreComp = (int) recvd.get(3);
                 
                 l.log(Level.INFO, "RECEIVED SERVER_PLACE(" + stone.getX() + "," + stone.getY() + ") Score=(" + scoreUser + "," + scoreComp + ")");
+                scoreText = "User:" + scoreUser + " Server:" + scoreComp;
                 scoreLabel.setText(scoreText);
                 
                 boardModel.placeStone(stone);

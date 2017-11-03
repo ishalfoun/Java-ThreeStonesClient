@@ -25,12 +25,12 @@ public class Flat extends Tile{
     public boolean hasStone() {
         return false;
     }
-    
+
     /**
      * This is what will be displayed on the board where flats are placed.
      * @return 
      */
-    public String toString(){
+    public String toString() {
         return "";
     }
 }

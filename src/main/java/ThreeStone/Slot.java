@@ -1,3 +1,4 @@
+
 package ThreeStone;
 
 /**
@@ -41,15 +42,17 @@ public class Slot extends Tile {
         return stone != null;
     }
     
-    
     /**
      * the toString checks the type of stone that is in the slot and prints out what kind it is to the cell in the table.
      * @return 
      */
-    public String toString(){
+    @Override
+    public String toString() {
         if (stone!=null)
             if (stone.getType()==PlayerType.COMPUTER)
                 return "[C]";
+            else if (stone.getType()==PlayerType.COMPUTER_LASTPLACE)
+                return "_C_";
             else
                 return "[P]";
         else

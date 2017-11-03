@@ -1,3 +1,4 @@
+
 package ThreeStone;
 
 import java.io.BufferedReader;
@@ -19,6 +20,7 @@ public class ThreeStonesBoard {
     Logger l = Logger.getLogger(ClientGame.class.getName());
     private Tile[][] board;
     private int size;
+    private Stone lastStone;
     
     /**
      * Constructor used to define the board.
@@ -62,8 +64,19 @@ public class ThreeStonesBoard {
     public void placeStone(Stone stone) {
         if(board[stone.getY()][stone.getX()].isPlayable()){
             Slot slot = (Slot) board[stone.getY()][stone.getX()];
+            
+            if (stone.getType()==PlayerType.COMPUTER)
+            {
+                if (lastStone !=null)
+                {
+                    lastStone.setType(PlayerType.COMPUTER);
+                }
+                stone.setType(PlayerType.COMPUTER_LASTPLACE);
+                lastStone=stone;
+            }
             slot.placeStone(stone);
             board[stone.getY()][stone.getX()] = slot;
+            
        // l.log(Level.INFO, "Placed at "+ stone.getY() + " " + stone.getX());
         //l.log(Level.INFO, "tostring is:" + board[stone.getY()][stone.getX()].toString());
         }
