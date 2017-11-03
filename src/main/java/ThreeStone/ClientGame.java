@@ -299,12 +299,8 @@ public class ClientGame {
         boardFrame.setTitle("Three Stones Online");
         boardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        table = new JTable(boardModel.getSize(), boardModel.getSize()){
-            @Override
-            public Class<?> getColumnClass(int columnIndex){
-                return Icon.class;
-            }
-        };
+        table = new JTable(boardModel.getSize(), boardModel.getSize());
+
         
         table.setRowSelectionAllowed(false);
         table.setColumnSelectionAllowed(false);
@@ -316,9 +312,11 @@ public class ClientGame {
             //table.getColumnModel().getColumn(i).setCellRenderer(new IconRenderer());
             for (int j = 0; j < 11; j++) {
                 String toPrint = boardModel.getBoard()[i][j].toString();
-                //table.setValueAt(toPrint, i, j);
+                table.setValueAt(toPrint, i, j);
+                System.out.println("i is " + i);
+                System.out.println("j is " + j);
                 //paintIcon(table, ("Images/computerStone.png"), i, j);
-                table.setValueAt(new ImageIcon("Images/computerStone.png"), i, j);
+                //table.setValueAt(new ImageIcon("Images/computerStone.png"), i, j);
                 
             }
         }
@@ -343,18 +341,6 @@ public class ClientGame {
      * 
      * @param table  the board that the user needs to be able to click on.
      */
-    /*public void setClickListeners(JTable table) {
-        table.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int row = table.rowAtPoint(evt.getPoint());
-                int col = table.columnAtPoint(evt.getPoint());
-                if (row >= 0 && col >= 0) {
-                    sendStone(row, col);
-                }
-            }
-        });
-*/
     public void setClickListeners() {
         table.addMouseListener(listen);
     }
