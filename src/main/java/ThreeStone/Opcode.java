@@ -6,7 +6,8 @@
 package ThreeStone;
 
 /**
- *
+ *Defines opcodes for the packets to defines what each packet represents.
+ * the opcode will be placed at the beginning of the packet
  * @author 1241616
  */
 public enum Opcode {

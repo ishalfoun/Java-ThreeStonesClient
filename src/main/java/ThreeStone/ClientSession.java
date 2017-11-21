@@ -16,8 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author i
+ *  The ClientSession object is responsible for maintaining a connection to the server.
+ * It is also responsible the sending and recieving of packets between the client and the server.
+ * @author Isaak
  */
 public class ClientSession {
     
@@ -29,7 +30,11 @@ public class ClientSession {
     private int packetSize;
     Logger l = Logger.getLogger(ClientGame.class.getName());
     
-    //constructor
+    /**
+     * The Constructor recieves a socket and defines packetsize.
+     * @param socket the socket to connect to
+     * @throws IOException 
+     */
     public ClientSession (Socket socket) throws IOException
     {
         this.socket=socket;
@@ -37,6 +42,10 @@ public class ClientSession {
         byteBuffer = new byte[packetSize];
     }
     
+    /**
+     * closes the connection with the server
+     * @throws IOException 
+     */
     public void closeSocket() throws IOException
     {
         socket.close();
